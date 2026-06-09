@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PharmaRoute — Pharmacy Delivery, Simplified</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --green-light: #E8F5F0;
+      --green-dark: #085041;
+      --cream: #FAFAF7;
+      --ink: #111111;
+      --muted: #666;
+      --border: #E8E8E3;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(250,250,247,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-mark svg { width: 20px; height: 20px; fill: white; }
+
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-cta {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .nav-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(ellipse, rgba(29,158,117,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--ink);
+      max-width: 800px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-title em { font-style: italic; color: var(--green); }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 48px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+
+    .hero-visual {
+      margin-top: 72px;
+      position: relative;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .mockup-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 220px;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .phone.tall { height: 420px; }
+    .phone.short { height: 360px; transform: translateY(30px); }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--cream);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .phone-notch {
+      width: 80px;
+      height: 24px;
+      background: white;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto 8px;
+      flex-shrink: 0;
+    }
+
+    .phone-header { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .phone-date { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+
+    .transit-card { background: var(--green); border-radius: 12px; padding: 12px; color: white; }
+    .transit-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-bottom: 2px; }
+    .transit-addr { font-size: 13px; font-weight: 700; }
+    .transit-btns { display: flex; gap: 6px; margin-top: 8px; }
+    .transit-btn { flex: 1; background: rgba(255,255,255,0.2); border-radius: 6px; padding: 5px; text-align: center; font-size: 10px; font-weight: 600; color: white; }
+    .transit-btn.confirm { background: white; color: var(--green); }
+
+    .stop-row { display: flex; align-items: flex-start; gap: 8px; }
+    .stop-num { font-size: 10px; font-weight: 700; color: var(--green); width: 16px; flex-shrink: 0; padding-top: 1px; }
+    .stop-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; margin-top: 3px; }
+    .stop-dot.done { background: #A8D5C2; }
+    .stop-info { flex: 1; }
+    .stop-street { font-size: 11px; font-weight: 600; color: var(--ink); }
+    .stop-street.done { text-decoration: line-through; color: var(--muted); }
+    .stop-city { font-size: 10px; color: var(--muted); }
+    .stop-pill { font-size: 9px; font-weight: 500; padding: 2px 8px; border-radius: 100px; background: #f0f0f0; color: var(--muted); white-space: nowrap; }
+    .stop-pill.done { background: var(--green-light); color: var(--green); }
+
+    .dash-header { background: var(--green); margin: -20px -16px 12px; padding: 20px 16px 16px; color: white; }
+    .dash-title { font-size: 11px; opacity: 0.7; margin-bottom: 2px; }
+    .dash-val { font-size: 22px; font-weight: 700; }
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dash-card { background: white; border-radius: 10px; padding: 10px; border: 1px solid var(--border); }
+    .dash-card-label { font-size: 9px; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+    .dash-card-val { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .dash-driver-row { display: flex; align-items: center; gap: 8px; background: white; border-radius: 10px; padding: 8px 10px; border: 1px solid var(--border); }
+    .driver-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .driver-name { font-size: 11px; font-weight: 600; color: var(--ink); flex: 1; }
+    .driver-status { font-size: 9px; color: var(--green); font-weight: 500; }
+
+    .stats { background: var(--green-dark); padding: 48px; display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
+    .stat { text-align: center; color: white; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 48px; line-height: 1; margin-bottom: 8px; }
+    .stat-label { font-size: 14px; opacity: 0.6; font-weight: 400; }
+
+    .features { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--green); margin-bottom: 16px; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 4vw, 52px); line-height: 1.1; letter-spacing: -0.5px; max-width: 560px; margin-bottom: 64px; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon { width: 48px; height: 48px; background: var(--green-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+    .feature-title { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.2px; }
+    .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    .how { background: white; padding: 120px 48px; }
+    .how-inner { max-width: 1100px; margin: 0 auto; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-top: 64px; }
+    .step-num { font-family: 'DM Serif Display', serif; font-size: 64px; color: var(--green-light); line-height: 1; margin-bottom: 16px; }
+    .step-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: var(--ink); }
+    .step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    .pricing { padding: 120px 48px; max-width: 1100px; margin: 0 auto; }
+
+    .pricing-card {
+      background: white;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      padding: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .pricing-left { flex: 1; min-width: 280px; }
+    .pricing-badge { display: inline-block; background: var(--green-light); color: var(--green); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+    .pricing-price { font-family: 'DM Serif Display', serif; font-size: 64px; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .pricing-period { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .pricing-features li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
+    .pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+    .pricing-right { background: var(--green); border-radius: 20px; padding: 40px; min-width: 300px; color: white; }
+    .pricing-right h3 { font-family: 'DM Serif Display', serif; font-size: 28px; margin-bottom: 12px; }
+    .pricing-right p { font-size: 14px; opacity: 0.8; margin-bottom: 24px; line-height: 1.6; }
+
+    .waitlist-form { display: flex; flex-direction: column; gap: 12px; }
+
+    .waitlist-input {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .waitlist-input::placeholder { color: rgba(255,255,255,0.5); }
+    .waitlist-input:focus { border-color: rgba(255,255,255,0.7); }
+
+    .waitlist-btn {
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .waitlist-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo-mark { width: 28px; height: 28px; background: var(--green); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+    .footer-logo-mark svg { width: 16px; height: 16px; fill: white; }
+    .footer-logo-text { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--green); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .features, .how, .pricing { padding: 80px 24px; }
+      .stats { gap: 40px; padding: 40px 24px; }
+      .pricing-card { padding: 32px; }
+      .mockup-container { gap: 12px; }
+      .phone { width: 160px; }
+      .phone.tall { height: 320px; }
+      .phone.short { height: 280px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <span class="nav-logo-text">PharmaRoute</span>
+    </a>
+    <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">Coming soon to Canadian pharmacies</div>
+    <h1 class="hero-title">Pharmacy delivery,<br /><em>finally done right</em></h1>
+    <p class="hero-sub">PharmaRoute gives independent pharmacies a complete delivery management system — driver app, dispatcher dashboard, and patient notifications — at a fraction of the cost.</p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-primary">Join the waitlist</a>
+      <a href="#features" class="btn-ghost">See how it works</a>
+    </div>
+
+    <div class="hero-visual">
+      <div class="mockup-container">
+        <div class="phone tall">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-header">Finish 4:57 PM &nbsp;·&nbsp; 2 stops left</div>
+            <div class="phone-date">Monday, June 8</div>
+            <div class="transit-card">
+              <div class="transit-label">Now delivering</div>
+              <div class="transit-addr">67 Celina Avenue</div>
+              <div class="transit-btns">
+                <div class="transit-btn">Failed</div>
+                <div class="transit-btn confirm">Confirm</div>
+              </div>
+            </div>
+            <div class="stop-row">
+              <div class="stop-num">01</div>
+              <div class="stop-dot"></div>
+              <div class="stop-info">
+                <div class="stop-street">425 King Street W</div>
+                <div class="stop-city">Oshawa, ON</div>
+              </div>
+              <div class="stop-pill">Pending</div>
+            </div>
+            <div class="stop-row">
+              <div class="stop-num" style="color:#A8D5C2">03</div>
+              <div class="stop-dot done"></div>
+              <div class="stop-info">
+                <div class="stop-street done">480 Simcoe St N</div>
+                <div class="stop-city">Oshawa, ON</div>
+              </div>
+              <div class="stop-pill done">✓ Done</div>
+            </div>
+            <div class="stop-row">
+              <div class="stop-num" style="color:#A8D5C2">04</div>
+              <div class="stop-dot done"></div>
+              <div class="stop-info">
+                <div class="stop-street done">75 Consumers Dr</div>
+                <div class="stop-city">Whitby, ON</div>
+              </div>
+              <div class="stop-pill done">✓ Done</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone short">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="dash-header">
+              <div class="dash-title">Today's deliveries</div>
+              <div class="dash-val">12</div>
+            </div>
+            <div class="dash-grid">
+              <div class="dash-card">
+                <div class="dash-card-label">Delivered</div>
+                <div class="dash-card-val" style="color:var(--green)">8</div>
+              </div>
+              <div class="dash-card">
+                <div class="dash-card-label">Pending</div>
+                <div class="dash-card-val">4</div>
+              </div>
+            </div>
+            <div class="dash-driver-row">
+              <div class="driver-dot"></div>
+              <div class="driver-name">Rahul M.</div>
+              <div class="driver-status">On route</div>
+            </div>
+            <div class="dash-driver-row">
+              <div class="driver-dot"></div>
+              <div class="driver-name">Sarah K.</div>
+              <div class="driver-status">On route</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">3×</div>
+      <div class="stat-label">faster route planning</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$199</div>
+      <div class="stat-label">per pharmacy / month</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">proof of every delivery</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">missed patient notifications</div>
+    </div>
+  </div>
+
+  <section class="features" id="features">
+    <div class="section-label">Built for pharmacies</div>
+    <h2 class="section-title">Everything your team needs, nothing they don't</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Smart Label Scanning</div>
+        <div class="feature-desc">Drivers scan prescription labels with their phone camera. AI extracts the address and patient email instantly — no manual entry.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <div class="feature-title">Optimized Route Planning</div>
+        <div class="feature-desc">Automatically calculates the most efficient delivery order with real ETAs for every stop. Drivers tap one button and go.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📲</div>
+        <div class="feature-title">Patient Notifications</div>
+        <div class="feature-desc">Patients get an email when their delivery is scheduled, when it's on the way, and when it's delivered — with photo proof.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✍️</div>
+        <div class="feature-title">Proof of Delivery</div>
+        <div class="feature-desc">Every delivery is confirmed with a photo or patient signature, stored securely and accessible from the dispatcher dashboard.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <div class="feature-title">Dispatcher Dashboard</div>
+        <div class="feature-desc">Pharmacy staff see all drivers, live GPS positions, today's orders, and full delivery history — from any browser, anywhere.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Driver Pay Tracking</div>
+        <div class="feature-desc">Track driver earnings automatically — hourly, per delivery, or per km. Pay reports are always up to date.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="how-inner">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">From prescription to doorstep</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title">Scan the label</div>
+          <div class="step-desc">Driver scans the prescription label with the PharmaRoute app. AI reads the address automatically.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title">Get your route</div>
+          <div class="step-desc">Tap Start Driving. PharmaRoute builds the optimal route and opens Google Maps with all stops loaded.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title">Deliver & confirm</div>
+          <div class="step-desc">At each stop, take a photo or get a signature. The patient gets notified automatically.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-title">Dispatcher sees all</div>
+          <div class="step-desc">Pharmacy staff track every driver and delivery in real time from the web dashboard.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="waitlist">
+    <div class="pricing-card">
+      <div class="pricing-left">
+        <div class="pricing-badge">Simple pricing</div>
+        <div class="pricing-price">$199</div>
+        <div class="pricing-period">per pharmacy / month</div>
+        <ul class="pricing-features">
+          <li>Unlimited drivers</li>
+          <li>Unlimited deliveries</li>
+          <li>Driver app (iOS & Android)</li>
+          <li>Dispatcher web dashboard</li>
+          <li>Patient email notifications</li>
+          <li>Proof of delivery storage</li>
+          <li>Driver pay tracking</li>
+          <li>Canadian pharmacy support</li>
+        </ul>
+      </div>
+
+      <div class="pricing-right">
+        <h3>Join the waitlist</h3>
+        <p>PharmaRoute is currently in beta with select Canadian pharmacies. Join the waitlist and we'll reach out when we're ready for you.</p>
+        <div class="waitlist-form">
+          <input class="waitlist-input" type="text" placeholder="Pharmacy name" />
+          <input class="waitlist-input" type="email" placeholder="Your email address" />
+          <input class="waitlist-input" type="text" placeholder="City, Province" />
+          <button class="waitlist-btn" onclick="handleWaitlist()">Request early access</button>
+        </div>
+        <p id="waitlist-success" style="display:none; margin-top:16px; font-size:14px; opacity:0.9;">✓ You're on the list! We'll be in touch soon.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="#" class="footer-logo">
+      <div class="footer-logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <span class="footer-logo-text">PharmaRoute</span>
+    </a>
+    <span class="footer-copy">© 2025 PharmaRoute. Built for Canadian pharmacies.</span>
+    <div class="footer-links">
+      <a href="mailto:hello@pharmaroute.ca">Contact</a>
+      <a href="#">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    function handleWaitlist() {
+      const btn = document.querySelector('.waitlist-btn');
+      const success = document.getElementById('waitlist-success');
+      btn.style.display = 'none';
+      success.style.display = 'block';
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .step, .stat').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
