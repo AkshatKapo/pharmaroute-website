@@ -664,5 +664,53 @@
       observer.observe(el);
     });
   </script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3OeaWZ1Acth5H5TdNFVffWyc-JuHclXY",
+    authDomain: "pharmaroute-7d104.firebaseapp.com",
+    projectId: "pharmaroute-7d104",
+    storageBucket: "pharmaroute-7d104.firebasestorage.app",
+    messagingSenderId: "742767516326",
+    appId: "1:742767516326:web:8655fb1d93d6147390b267"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.handleWaitlist = async function () {
+    const pharmacyName = document.querySelector('.waitlist-input[type="text"]').value.trim();
+    const email = document.querySelector('.waitlist-input[type="email"]').value.trim();
+    const cityProvince = document.querySelectorAll('.waitlist-input[type="text"]')[1].value.trim();
+
+    if (!pharmacyName || !email || !cityProvince) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const btn = document.querySelector('.waitlist-btn');
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+
+    try {
+      await addDoc(collection(db, "requests"), {
+        pharmacyName,
+        email,
+        cityProvince,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+
+      document.getElementById('waitlist-success').style.display = 'block';
+      btn.style.display = 'none';
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      btn.disabled = false;
+      btn.textContent = "Request early access";
+    }
+  };
+</script>
 </body>
 </html>
